@@ -17,13 +17,15 @@ class SessionsMemoryDAO {
 
 			if (email == 'rafa8as@gmail.com') {
 				const admin = admins.find(admin => admin.email == email);
-				if (!admin || !isValidPassword(admin, password)) return `Invalid credentials.`
+				if (!admin || !isValidPassword(admin, password))
+				 return `Invalid credentials.`
 				req.session.user = admin;
 				return admin;
 			};
 
 			const user = users.find(user => user.email == email);
-			if (!user || !isValidPassword(user, password)) return `Invalid credentials.`;
+			if (!user || !isValidPassword(user, password))
+			 return `Invalid credentials.`;
 			req.session.user = user;
 			return user;
 		} catch (error) {
@@ -36,7 +38,8 @@ class SessionsMemoryDAO {
 			const users = this.users;
 			const { email, password, first_name, last_name } = req.body;
 
-			if (email == 'rafa8as@gmail.com') return `You can't create an admin account.`;
+			if (email == 'rafa8as@gmail.com')
+			 return `You can't create an admin account.`;
 
 			const user = users.find(user => user.email == email);
 			if (user) return `Email already exist.`;
@@ -74,6 +77,33 @@ class SessionsMemoryDAO {
 	getLogoutDao(req, res) {
 		try {
 			return req.session.destroy();
+		} catch (error) {
+			return `${error}`;
+		}
+	}
+	getRestoreDao(req, res) {
+		try {
+		} catch (error) {
+			return `${error}`;
+		}
+	}
+
+	getRestoreCallbackDao(req, res) {
+		try {
+		} catch (error) {
+			return `${error}`;
+		}
+	}
+
+	getPremiumDao(req, res) {
+		try {
+		} catch (error) {
+			return `${error}`;
+		}
+	}
+
+	getUserDao(req, res) {
+		try {
 		} catch (error) {
 			return `${error}`;
 		}

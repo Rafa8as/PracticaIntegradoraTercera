@@ -11,8 +11,8 @@ const environment = async ()=>{
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        console.log ("mongo connected");
-        logger.info('Mongo connected')
+        console.log ("mongo");
+        logger.info('Mongo')
 
     }catch (err) {
         logger.error (`Mongo error: ${err}`);

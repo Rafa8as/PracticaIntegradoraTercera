@@ -11,9 +11,11 @@ import {
 } from '../../utils/functions.utils.js'
 
 class ViewsMongoDAO {
-	constructor() {}
+	constructor() {
+		
+	}
 
-	async getHomeDao() {
+	async getHomeDao(req,res) {
 		try {
 			const cart = await mongoCart(req,res);
 			const {user} = req.session;
@@ -21,6 +23,7 @@ class ViewsMongoDAO {
 				header: true,
 				user,
 				cart,
+				style: 'home.css',
 				documentTitle: 'Home',
 			}
 			return payload
@@ -33,6 +36,7 @@ class ViewsMongoDAO {
 		try {
 			const payload = {
 				header: false,
+				style: 'login.css',
 				documentTitle: 'login',
 			}
 			return payload;
@@ -45,6 +49,7 @@ class ViewsMongoDAO {
 		try {
 			const payload = {
 				header: false,
+				style: 'register.css',
 				documentTitle: 'Register',
 			}
 			return payload;
@@ -166,6 +171,21 @@ class ViewsMongoDAO {
 				},
 				payload: cart.products,
 			}
+			return payload;
+		} catch (error) {
+			return `${error}`;
+		}
+	}
+	async getRestoreDao(req, res) {
+		try {
+			let { restoreCookie } = req.signedCookies;
+			if (!restoreCookie) return res.redirect('/');
+			const { user } = req.session;
+			const payload = {
+				user,
+				style: 'restore.css',
+				documentTitle: 'Restore',
+			};
 			return payload;
 		} catch (error) {
 			return `${error}`;

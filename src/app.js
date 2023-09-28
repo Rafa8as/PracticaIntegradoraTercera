@@ -72,10 +72,6 @@ const initializeApp = () => {
    
     router(app)
 };
-import { Server } from "socket.io";
-import "dotenv/config";
-const httpServer = app.listen(PORT, host, () => { logger.info(`Server arriba en http://${host}: ${PORT}`); });
-setupSocket (httpServer)
-const io = new Server(httpServer);
+
 export default initializeApp;
 

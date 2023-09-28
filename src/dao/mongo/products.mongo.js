@@ -34,8 +34,8 @@ class ProductsMongoDAO {
 	async createProductDao(product) {
 		try {
 			const newProduct = await productModel.create(product);
-			if(!newProduct) return `No product was created.`
-			return newProduct
+			if(!newProduct) return `No product was created.`;
+			return newProduct;
 		} catch (error) {
 			return `${error}`;
 		}

@@ -41,7 +41,8 @@
     "winston": "^3.10.0"
   },
   "devDependencies": {
-    "@faker-js/faker": "^8.0.2"
+    "@faker-js/faker": "^8.0.2",
+    "npm": "^10.1.0"
   },
   "repository": {
     "type": "git",

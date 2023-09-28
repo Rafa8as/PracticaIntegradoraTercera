@@ -6,7 +6,7 @@ import cartsRepository  from "../repositories/carts.repository.js";
 export const carts = async (req, res) =>{
     try{
         const payload = await cartsRepository.getCarts();
-		if(typeof(payload)=='string')
+		if(typeof payload=='string')
 		 return res.status(404).json({status: 'error', message: payload});
         return res.status(200).json ({status: 'success', carts: payload});
 
@@ -19,7 +19,7 @@ export const cart = async (req, res) => {
     try{
         const {cid} = req.params;
         const payload = await cartsRepository.getCart(cid);
-        if (typeof(payload)=='string')
+        if (typeof payload =='string')
 		 return res.status(404).json({status: 'error', message: payload});
 		
             return res.status(200).send({status: 'success', cart: payload});
@@ -31,7 +31,7 @@ export const cart = async (req, res) => {
 export const insertCart = async (req, res) => {
 	try {
 		const payload = await cartsRepository.createCart();
-        if (typeof(payload)=='string')
+        if (typeof payload=='string')
 		 return res.status(404).json({status: 'error', message: payload});
 		
             return res.status(200).send({status: 'success', cart: payload});
@@ -45,7 +45,7 @@ export const insertProduct = async (req, res) => {
 	try {
 		const { cid, pid } = req.params;
 		const payload = await cartsRepository.createProduct(cid, pid);
-        if (typeof(payload)=='string') 
+        if (typeof payload =='string') 
 		 return res.status(404).json({status: 'error', message: payload});
 		
             return res.status(200).send({status: 'success', cart: payload});
@@ -60,7 +60,7 @@ export const editCart = async (req, res) => {
 		const { cid } = req.params;
 		const newCart = req.body;
 		const payload = await cartsRepository.updateCart(cid, newCart);
-		if (typeof(payload)=='string') return res.status(404).json({status: 'error', message: payload});
+		if (typeof payload=='string') return res.status(404).json({status: 'error', message: payload});
 		
 		return res.status(200).send({status: 'success', cart: payload});
   
@@ -75,7 +75,7 @@ export const editProduct = async (req, res) => {
 		const {quantity} = req.body;
 		const payload = await cartsRepository.updateCart(cid,pid,quantity);
 
-		if (typeof(payload)=='string') return res.status(404).json({status: 'error', message: payload});
+		if (typeof payload=='string') return res.status(404).json({status: 'error', message: payload});
 		
 		return res.status(200).send({status: 'success', cart: payload});
   
@@ -90,7 +90,7 @@ export const clearCart = async (req, res) => {
 	
 	const payload = await cartsRepository.deleteCart(cid);
 
-	if (typeof(payload)=='string') return res.status(404).json({status: 'error', message: payload});
+	if (typeof payload=='string') return res.status(404).json({status: 'error', message: payload});
 	
 	return res.status(200).send({status: 'success', cart: payload});
 
@@ -106,7 +106,7 @@ export const clearProduct = async (req, res) => {
 		
 		const payload = await cartsRepository.deleteProduct(cid,pid);
 
-		if (typeof(payload)=='string') return res.status(404).json({status: 'error', message: payload});
+		if (typeof payload=='string') return res.status(404).json({status: 'error', message: payload});
 		
 		return res.status(200).send({status: 'success', cart: payload});
   
@@ -117,7 +117,7 @@ export const clearProduct = async (req, res) => {
 export const purchase = async (req, res) => {
 	try {
 		const payload = await cartsRepository.purchaseCart(req, res);
-		if (typeof(payload) == 'string') return res.status(404).json({ status: 'error', message: payload });
+		if (typeof payload == 'string') return res.status(404).json({ status: 'error', message: payload });
 		return res.status(200).json({ status: 'success', cart: payload });
 	} catch (err) {
 		return res.status(500).json({ status: 'error', error: err.message });

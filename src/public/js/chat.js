@@ -12,7 +12,7 @@ Swal.fire({
 	socket.emit("user", { user, message: "Join the chat." });
 });
 
-socket.on("messagesDB", (data) => {
+socket.on("messagesDB", data => {
 	let log = document.querySelector(".chat-message");
 	let messages = "";
 	data.forEach(message => {

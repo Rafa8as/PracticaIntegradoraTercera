@@ -14,13 +14,13 @@ function setupSocket(httpServer) {
       const products = await productModel.find().lean();
       io.emit('products', products);
   
-      productModel.watch().on('change', async (change) => {
+      productModel.watch().on('change', async change => {
         const products = await productModel.find().lean();
         io.emit('products', products);
       });
   
      
-      socket.on('user', async (data) => {
+      socket.on('user', async data => {
         await messageModel.create({
           user: data.user,
           message: data.message,
@@ -30,7 +30,7 @@ function setupSocket(httpServer) {
         io.emit('messagesDB', messagesDB);
       });
   
-      socket.on('message', async (data) => {
+      socket.on('message', async data => {
         await messageModel.create({
           user: data.user,
           message: data.message,
@@ -41,7 +41,7 @@ function setupSocket(httpServer) {
       });
   
       socket.on('disconnect', () => {
-        console.log(`Client ${socket.id} disconnected`);
+       logger.info(`Client ${socket.id} disconnected`);
       });
     })
   }

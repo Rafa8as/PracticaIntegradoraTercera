@@ -14,11 +14,11 @@ import {
  const router = Router ();
 
  router.get ('/', products);
- router.get ('/:id',product);
- router.post ('/',roleAuth('admin'), insertProduct);
- router.put ('/:pid', roleAuth('admin'), editProduct);
- router.delete ('/:pid', roleAuth ('admin'), eraseProduct);
- router.post('/mockingproducts', roleAuth('admin', mockingProducts));
+ router.get ('/:pid',product);
+ router.post ('/',roleAuth(['admin', 'premium']), insertProduct);
+ router.put ('/:pid', roleAuth(['admin', 'premium']), editProduct);
+ router.delete ('/:pid', roleAuth (['admin', 'premium']), eraseProduct);
+ router.post('/mockingproducts', roleAuth(['admin', 'premium']), mockingProducts);
  console.log (products)
  
  

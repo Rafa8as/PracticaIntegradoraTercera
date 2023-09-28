@@ -4,6 +4,7 @@ import { ticketModel } from './models/ticket.model.js';
 import { getAmount } from "./../../utils/functions.utils.js"
 import UserDTO from "../../dto/user.dto.js"
 import {sendTicketEmail} from '../../utils/email.utils.js';
+
 import logger from '../../utils/logger.util.js';
 
 class CartsMongoDAO {
@@ -43,14 +44,17 @@ class CartsMongoDAO {
 
 	async createProductDao(cid, pid) {
 		try {
+			const {user} = req.session;
 			const cart = await cartModel.findById(cid);
 			if (!cart) return `No cart found with ID '${cid}'.`;
 
 			const product = await productModel.findById(pid);
 			if (!product) return `No product found with ID '${pid}'.`;
+			if (user.email == product.owner)
+			return `Cant't add a product created by you`;
 
 			const productInCart = cart.products.find(
-				(item) => item._id.toString() === product.id
+				item => item._id.toString() === product.id
 			);
 
 			if (!productInCart) {
@@ -75,21 +79,30 @@ class CartsMongoDAO {
 			return `${error}`;
 		}
 	}
-
-	async updateCartDao(cid, newCart) {
+	async updateCartDao(req, res, cid, newCart) {
 		try {
+			const { user } = req.session;
 			const cart = await cartModel.findById(cid);
 			if (!cart) return `No cart found with ID '${cid}'.`;
 
 			for (const product of newCart) {
+				const existProduct = await productModel.findById(product._id);
+				if(!existProduct) {
+					logger.warn(`Product ${product._id} doesn't exist.`);
+					continue;
+				};
+
+				if (user.email == existProduct.owner) {
+					logger.warn(`Can't add the product with ID '${product._id}' because was created by you.`);
+					continue;
+				};
+
 				if (product.quantity < 1) {
 					logger.warn(
 						`'${product.quantity}' is an invalid value for quantity, new value was setted on '1'`
 					);
 					product.quantity = 1;
 				}
-
-				const existProduct = await productModel.findById(product._id);
 
 				if (existProduct && existProduct.stock < product.quantity) {
 					product.quantity = existProduct.stock;
@@ -100,7 +113,7 @@ class CartsMongoDAO {
 
 				if (existProduct && existProduct.stock >= product.quantity) {
 					const productInCart = cart.products.find(
-						(productInCart) => productInCart.id == existProduct.id
+						productInCart => productInCart.id == existProduct.id
 					);
 
 					if (!productInCart) {
@@ -138,7 +151,7 @@ class CartsMongoDAO {
 			if (!product) return `No product found with ID '${pid}'.`;
 
 			const productInCart = cart.products.find(
-				(item) => item._id.toString() === product.id
+				item => item._id.toString() === product.id
 			);
 
 			if (!productInCart)
@@ -216,16 +229,19 @@ class CartsMongoDAO {
 				const productQuantity = product.quantity;
 
 				if (existProduct && productStock < productQuantity) {
-					logger.warn(`There's not enough stock for product '${productId}'`);
+					logger.warn(`No enough stock for product '${productId}'`);
 					continue;
 				}
 
-				if (existProduct && productStock >= productQuantity && productStock > 0) {
+				if (
+					existProduct &&
+					productStock >= productQuantity &&
+					productStock > 0
+				) {
 					const newStock = productStock - productQuantity;
-					await productModel.findByIdAndUpdate(
-						productId,
-						{ $set: { 'stock': newStock } }
-					);
+					await productModel.findByIdAndUpdate(productId, {
+						$set: { stock: newStock },
+					});
 
 					await cartModel.findByIdAndUpdate(cid, {
 						$pull: { products: { _id: productId } },
@@ -234,7 +250,7 @@ class CartsMongoDAO {
 					const productToPurchase = {
 						...existProduct._doc,
 						quantity: productQuantity,
-					}
+					};
 					productsToPurchase.push(productToPurchase);
 				}
 			}
@@ -254,10 +270,11 @@ class CartsMongoDAO {
 				purchaser,
 			};
 
-			await sendTicketEmail(ticket); 
-			await sendMessage(ticket);
+			await sendTicketEmail(ticket);
+			await sendTicketMessage(ticket);
 			const createdTicket = await ticketModel.create(ticket);
-			if (!createdTicket) return `The following products could not be purchased: ${products}`;
+			if (!createdTicket)
+				return `The following products could not be purchased: ${products}`;
 			return createdTicket;
 		} catch (error) {
 			return `${error}`;

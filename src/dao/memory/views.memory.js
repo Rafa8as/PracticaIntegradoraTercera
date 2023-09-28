@@ -27,6 +27,7 @@ class ViewsMemoryDAO {
 				header: true,
 				user,
 				cart,
+				style: 'home.css',
 				documentTitle: 'Home',
 			}
 			return payload;
@@ -39,6 +40,7 @@ class ViewsMemoryDAO {
 		try {
 			const payload = {
 				header: false,
+				style: 'login.css',
 				documentTitle: 'Login',
 			}
 			return payload;
@@ -51,6 +53,7 @@ class ViewsMemoryDAO {
 		try {
 			const payload = {
 				header: false,
+				style: 'register.css',
 				documentTitle: 'Register',
 			}
 			return payload;
@@ -65,6 +68,7 @@ class ViewsMemoryDAO {
 			const payload = {
 				header: true,
 				user,
+				style: 'chat.css',
 				documentTitle: 'Chat',
 			}
 			return payload;
@@ -104,6 +108,7 @@ class ViewsMemoryDAO {
 				sort,
 				cart,
 				documentTitle: 'Products',
+				style: 'products.css',
 				
 			}
 			return payload;
@@ -125,6 +130,7 @@ class ViewsMemoryDAO {
 				header: true,
 				product,
 				cart,
+				style: 'product.css',
 				documentTitle: 'Product',
 			}
 			return payload;
@@ -150,6 +156,7 @@ class ViewsMemoryDAO {
 			const payload = {
 				header: true,
 				cart,
+				style: 'cart.css',
 				documentTitle: 'Cart',
 				helpers: {
 					multiply,
@@ -158,6 +165,12 @@ class ViewsMemoryDAO {
 				payload: existCart.products,
 			}
 			return payload;
+		} catch (error) {
+			return `${error}`;
+		}
+	}
+	async getRestoreDao(req, res) {
+		try {
 		} catch (error) {
 			return `${error}`;
 		}
